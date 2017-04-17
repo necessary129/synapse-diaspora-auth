@@ -39,13 +39,13 @@ class DiasporaAuthProvider:
             user=self.config.db_username,
             password=self.config.db_password,
             host=self.config.db_host,
-            port=self.config.port
+            port=self.config.db_port
         )
 
     @defer.inlineCallbacks
     def check_password(self, user_id, password):
-        # user_id is localpart:hs_bare. we only need the localpart.
-        local_part = user_id.split(':', 1)[0]
+        # user_id is @localpart:hs_bare. we only need the localpart.
+        local_part = user_id.split(':', 1)[0][1:]
         logger.info("Checking if user {} exists.".format(local_part))
         with self.connection.cursor() as cursor:
             yield threads.deferToThread( # Don't think this is needed, but w/e
