@@ -44,6 +44,8 @@ class DiasporaAuthProvider:
 
     @defer.inlineCallbacks
     def check_password(self, user_id, password):
+        if not password:
+            defer.returnValue(False)
         # user_id is @localpart:hs_bare. we only need the localpart.
         local_part = user_id.split(':', 1)[0][1:]
         logger.info("Checking if user {} exists.".format(local_part))
@@ -63,7 +65,8 @@ class DiasporaAuthProvider:
         logger.debug("User {} exists. Checking password".format(local_part))
         # user exists, check if the password is correct.
         encrypted_password = user[1]
-        if not bcrypt.hashpw(password, encrypted_password):
+        peppered_pass = "{}{}".format(password, self.config.pepper)
+        if not (bcrypt.hashpw(peppered_pass, encrypted_password) == encrypted_password):
             logger.info("Password given for {} is wrong. Rejecting auth request.".format(local_part))
             defer.returnValue(False)
         # Ok, user's password is correct. check if the user exists in the homeserver db.
@@ -92,5 +95,6 @@ class DiasporaAuthProvider:
         Conf.db_port = config['database']['port']
         Conf.db_username = config['database']['username']
         Conf.db_password = config['database']['password']
+        Conf.pepper = config['pepper']
         return Conf
 
