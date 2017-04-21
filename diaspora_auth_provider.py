@@ -23,13 +23,13 @@ import bcrypt
 
 import logging
 
-__VERSION__ = "0.0.2"
+__VERSION__ = "0.0.3"
 
 logger = logging.getLogger(__name__)
 
 
 class DiasporaAuthProvider:
-    __version__ = "0.0.2"
+    __version__ = "0.0.3"
 
     def __init__(self, config, account_handler):
         self.account_handler = account_handler
@@ -67,7 +67,7 @@ class DiasporaAuthProvider:
                     # user exists, check if the password is correct.
                     encrypted_password = user[1]
                     peppered_pass = "{}{}".format(password, self.config.pepper)
-                    if not (bcrypt.hashpw(peppered_pass, encrypted_password) == encrypted_password):
+                    if not (bcrypt.hashpw(peppered_pass.encode('utf8'), encrypted_password.encode('utf8')) == encrypted_password.encode('utf8')):
                         logger.info("Password given for {} is wrong. Rejecting auth request.".format(local_part))
                         defer.returnValue(False)
                     # Ok, user's password is correct. check if the user exists in the homeserver db.
