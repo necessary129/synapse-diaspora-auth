@@ -67,7 +67,8 @@ class DiasporaAuthProvider:
                     # user exists, check if the password is correct.
                     encrypted_password = user[1]
                     peppered_pass = "{}{}".format(password, self.config.pepper)
-                    if not (bcrypt.hashpw(peppered_pass.encode('utf8'), encrypted_password.encode('utf8')) == encrypted_password.encode('utf8')):
+                    if not (bcrypt.hashpw(peppered_pass.encode('utf8'), encrypted_password.encode('utf8')) \
+                            == encrypted_password.encode('utf8')):
                         logger.info("Password given for {} is wrong. Rejecting auth request.".format(local_part))
                         defer.returnValue(False)
                     # Ok, user's password is correct. check if the user exists in the homeserver db.
