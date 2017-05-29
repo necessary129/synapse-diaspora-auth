@@ -46,7 +46,7 @@ setup(
 
     version=exec_file("diaspora_auth_provider.py", "__VERSION__"),
     py_modules=["diaspora_auth_provider"],
-    description="An LDAP3 auth provider for Synapse",
+    description="A Diaspora* auth provider for Synapse",
     install_requires=[
         "Twisted>=15.1.0",
         "psycopg2",
