@@ -22,13 +22,13 @@ import bcrypt
 
 import logging
 
-__VERSION__ = "0.0.4"
+__VERSION__ = "0.0.5"
 
 logger = logging.getLogger(__name__)
 
 
 class DiasporaAuthProvider:
-    __version__ = "0.0.4"
+    __version__ = "0.0.5"
 
     def __init__(self, config, account_handler):
         self.account_handler = account_handler
@@ -55,15 +55,16 @@ class DiasporaAuthProvider:
         local_part = user_id.split(':', 1)[0][1:]
         logger.info("Checking if user {} exists.".format(local_part))
         try:
-            with self.connection.cursor() as cursor:
-                yield threads.deferToThread( # Don't think this is needed, but w/e
-                    cursor.execute,
-                    "SELECT username, encrypted_password FROM users WHERE username=%s",
-                    (local_part,)
-                )
-                user = yield threads.deferToThread(
-                    cursor.fetchone
-                )
+            with self.connection:
+                with self.connection.cursor() as cursor:
+                    yield threads.deferToThread( # Don't think this is needed, but w/e
+                        cursor.execute,
+                        "SELECT username, encrypted_password FROM users WHERE username=%s",
+                        (local_part,)
+                    )
+                    user = yield threads.deferToThread(
+                        cursor.fetchone
+                    )
             # check if the user exists.
             if not user:
                 logger.info("User {} does not exist. Rejecting auth request".format(local_part))
