@@ -92,3 +92,60 @@ Then run these queries:
 
 
 And you will be good to go!
+
+Email Authentication
+~~~~~~~~~~~~~~~~~~~~
+
+While this module helps in authenticating with diaspora, we need to set up mxisd_ for supporting
+authentication through email.
+
+Installation
+^^^^^^^^^^^^
+
+Follow the instructions `here <https://github.com/kamax-io/mxisd/blob/master/docs/getting-started.md#install>`_
+
+Configuration & Setup
+^^^^^^^^^^^^^^^^^^^^^
+
+Follow `this <https://github.com/kamax-io/mxisd/blob/master/docs/getting-started.md#configure>`_.
+
+Basically, if you used the debian package, you just need to set up the ``matrix.domain`` first.
+
+And then, add these lines to ``mxisd.yaml``:
+
+.. code:: yaml
+
+    sql:
+      enabled: true
+      type: mysql
+      connection: "//127.0.0.1/pprod?user=<USERNAME>&password=<PASSWORD>"
+      identity:
+        type: 'uid'
+        query: "select (case when ?='email' then username else null end) as uid from users where email=?"
+
+Where ``<USERNAME>`` and ``<PASSWORD>`` are the database user and password you created when you set up database for synape-diaspora-auth
+
+Now follow the steps `here <https://github.com/kamax-io/mxisd/blob/master/docs/features/authentication.md#advanced>`_. ie, forward the ``/_matrix/client/r0/login`` endpoint to mxisd and add
+
+.. code:: yaml
+
+    dns.overwrite.homeserver.client:
+      - name: '<DOMAIN>'
+        value: 'http://localhost:8008'
+
+where ``<DOMAIN>`` is your matrix server name.
+
+An Apache2 reverse proxy example is already given `here <https://github.com/kamax-io/mxisd/blob/master/docs/features/authentication.md#apache2>`_. An example nginx configuration would be this:
+
+.. code::
+
+    location /_matrix/client/r0/login {
+        proxy_pass http://localhost:8090/_matrix/client/r0/login;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+Make sure to put this above other matrix reverse proxy directives. And Congrats! You now have a competely integrated synapse - diaspora setup! :D
+
+.. _mxisd: https://github.com/kamax-io/mxisd
