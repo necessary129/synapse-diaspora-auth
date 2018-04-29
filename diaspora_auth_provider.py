@@ -22,13 +22,13 @@ import bcrypt
 
 import logging
 
-__VERSION__ = "0.1.0"
+__VERSION__ = "0.1.1"
 
 logger = logging.getLogger(__name__)
 
 
 class DiasporaAuthProvider:
-    __version__ = "0.1.0"
+    __version__ = "0.1.1"
 
     def __init__(self, config, account_handler):
         self.account_handler = account_handler

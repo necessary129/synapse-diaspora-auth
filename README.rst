@@ -118,12 +118,12 @@ And then, add these lines to ``mxisd.yaml``:
     sql:
       enabled: true
       type: mysql
-      connection: "//127.0.0.1/pprod?user=<USERNAME>&password=<PASSWORD>"
+      connection: "//<HOST>/<DATABASE>?user=<USERNAME>&password=<PASSWORD>"
       identity:
         type: 'uid'
         query: "select (case when ?='email' then username else null end) as uid from users where email=?"
 
-Where ``<USERNAME>`` and ``<PASSWORD>`` are the database user and password you created when you set up database for synape-diaspora-auth
+Where ``<HOST>``, ``<DATABASE>``,``<USERNAME>`` and ``<PASSWORD>`` are your database host, diaspora database, user and password you created when you set up database for synapse-diaspora-auth
 
 Now follow the steps `here <https://github.com/kamax-io/mxisd/blob/master/docs/features/authentication.md#advanced>`_. ie, forward the ``/_matrix/client/r0/login`` endpoint to mxisd and add
 
