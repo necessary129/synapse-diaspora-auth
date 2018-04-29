@@ -39,8 +39,8 @@ def exec_file(path_segments, name):
 
 setup(
     name="synapse-diaspora-auth",
-    author="Shamil K Muhammed",
-    author_email="mail@shamilk.me",
+    author="Shamil K",
+    author_email="noteness@riseup.net",
     license="GPLv3",
     keywords="matrix synapse diaspora authentication",
 
@@ -50,11 +50,12 @@ setup(
     install_requires=[
         "Twisted>=15.1.0",
         "psycopg2",
-        "bcrypt"
+        "bcrypt",
+        "pymysql"
     ],
     long_description=read("README.rst"),
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
         'Programming Language :: Python :: 2.7',
         'Topic :: Communications :: Chat'
